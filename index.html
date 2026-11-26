@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="./assets/index-C8MJeq9D.js"></script>
+    <script type="module" crossorigin src="./assets/site-compat-v4.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BjHMhQhn.css?v=mobile3">
   <style id="mobile-menu-v3">
 .mobile-menu-toggle{display:none}
@@ -33,6 +33,7 @@
 .stage{align-items:flex-start}.card,.panel,.split,.split-text,.split-media{min-width:0;max-width:100%}.rf-row{grid-template-columns:minmax(0,1fr)}.review-form{min-width:0}.rf-input{min-width:0}
 }
 </style>
+<style>.contact-photo{float:right;width:44%;margin:0 0 1rem 2rem}.contact-photo img{display:block;width:100%;height:auto;border-radius:16px}.card:after{content:"";display:block;clear:both}@media(max-width:860px){.contact-photo{float:none;width:100%;margin:0 0 1rem}}</style>
 </head>
   <body>
     <!-- Размытый лес на заднем плане (тёплые коричневые оттенки) -->
@@ -58,71 +59,3 @@ new MutationObserver(setup).observe(document.getElementById('app'),{childList:tr
 </body>
 
 </html>
-<!-- inject-contacts-photo -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const observer = new MutationObserver((mutations, obs) => {
-      const h2s = Array.from(document.querySelectorAll('h2'));
-      const contactsH2 = h2s.find(el => el.textContent.trim() === 'Контакты');
-      
-      if (contactsH2) {
-        // Находим саму карточку
-        const card = contactsH2.closest('div');
-        
-        if (card && !document.getElementById('contacts-photo-injected')) {
-          // 1. Делаем саму карточку flex-контейнером (как на других блоках)
-          card.style.display = 'flex';
-          card.style.alignItems = 'center';
-          card.style.justifyContent = 'space-between';
-          card.style.gap = '40px';
-          // Если у карточки была фиксированная максимальная ширина, немного расширим ее
-          card.style.maxWidth = '1000px'; 
-          
-          if (window.innerWidth < 900) {
-            card.style.flexDirection = 'column';
-          }
-          
-          // 2. Весь текущий текст (заголовки, параграфы, кнопки) нужно обернуть в отдельный div, 
-          // чтобы они стояли слева как единый блок
-          const textWrapper = document.createElement('div');
-          textWrapper.style.flex = '1 1 50%';
-          textWrapper.style.display = 'flex';
-          textWrapper.style.flexDirection = 'column';
-          textWrapper.style.alignItems = 'flex-start'; // Чтобы текст был слева
-          
-          // Переносим все дочерние элементы карточки в textWrapper
-          while (card.firstChild) {
-            textWrapper.appendChild(card.firstChild);
-          }
-          
-          // Возвращаем textWrapper обратно в карточку
-          card.appendChild(textWrapper);
-          
-          // 3. Создаем блок для картинки справа
-          const imgWrapper = document.createElement('div');
-          imgWrapper.id = 'contacts-photo-injected';
-          imgWrapper.style.flex = '1 1 50%';
-          imgWrapper.style.display = 'flex';
-          imgWrapper.style.justifyContent = 'center'; // Центрируем картинку в правой колонке
-          
-          const img = document.createElement('img');
-          img.src = './images/contacts-photo.webp';
-          img.style.width = '100%';
-          img.style.maxWidth = '450px';
-          img.style.height = 'auto';
-          img.style.objectFit = 'cover';
-          img.style.borderRadius = '16px'; // Небольшое скругление самой картинки внутри рамки
-          
-          img.onerror = () => { img.style.display = 'none'; };
-          
-          imgWrapper.appendChild(img);
-          card.appendChild(imgWrapper);
-          
-          obs.disconnect();
-        }
-      }
-    });
-    
-    observer.observe(document.body, { childList: true, subtree: true });
-  });
-</script>
